@@ -1,9 +1,9 @@
 {
-  "name": "savvy-progress",
+  "name": "agent-office",
   "owner": { "name": "Leromem" },
   "plugins": [
     {
-      "name": "savvy-progress",
+      "name": "agent-office",
       "source": "./",
       "description": "Progress bar, agents panel and a separate Workers window per project."
     }

@@ -1,4 +1,4 @@
-# savvy-progress
+# agent-office
 
 A mod for [Claude Code](https://claude.com/claude-code) that shows what your helper agents (subagents) are doing.
 
@@ -17,7 +17,7 @@ You need Claude Code (terminal or desktop app). The Workers window needs Windows
 ### Terminal
 
 ```
-/plugin install savvy-progress --marketplace Leromem/savvy-progress
+/plugin install agent-office --marketplace Leromem/agent-office
 ```
 
 1. Answer `y` to **Add marketplace?**
@@ -27,7 +27,7 @@ You need Claude Code (terminal or desktop app). The Workers window needs Windows
 From a normal shell instead:
 
 ```bash
-claude plugin install savvy-progress --marketplace Leromem/savvy-progress
+claude plugin install agent-office --marketplace Leromem/agent-office
 ```
 
 ### Claude desktop app
@@ -35,12 +35,12 @@ claude plugin install savvy-progress --marketplace Leromem/savvy-progress
 `/plugin` does not run in the desktop app. Use the menu:
 
 1. Click **+** next to the message box, then **Plugins**.
-2. Choose **Add marketplace** and enter `Leromem/savvy-progress`.
-3. Install **savvy-progress**, then start a new chat.
+2. Choose **Add marketplace** and enter `Leromem/agent-office`.
+3. Install **agent-office**, then start a new chat.
 
-### Already have savvy-progress from `claude-kit`?
+### Already have `savvy-progress` from `claude-kit`?
 
-Both have the same plugin name. Uninstall the old one first, or the two will clash:
+agent-office replaces it. Uninstall the old one so you don't get two bars and two panels:
 
 ```bash
 claude plugin uninstall savvy-progress
@@ -59,7 +59,7 @@ After you update the mod, type `/reload-plugins` in every open session, then clo
 
 ## Works with savvy-flow (and any orchestrator)
 
-[savvy-flow](https://github.com/JohnnyVizz/claude-kit/tree/main/plugins/savvy-flow) is a skill that plans a job, hands parts to cheaper or stronger worker agents, and reviews the results. It reports to this mod automatically, so the bar, the panel and the window fill in by themselves.
+[savvy-flow](https://github.com/JohnnyVizz/claude-kit/tree/main/plugins/savvy-flow) is a skill that plans a job, hands parts to cheaper or stronger worker agents, and reviews the results. The panel and window show its worker agents by themselves. To get the progress bar and the planned tasks too, point it at this mod (see the note below).
 
 Install it too:
 
@@ -69,15 +69,23 @@ Install it too:
 
 Then type `/savvy-flow` and describe your task.
 
+**Note:** savvy-flow was written to call a tool named `mcp__savvy-progress__progress`. This mod's tools are named `mcp__agent-office__progress` and `mcp__agent-office__step`, so savvy-flow's own progress calls don't reach it. Add this to your `CLAUDE.md` so they do:
+
+```
+When /savvy-flow tells you to call mcp__savvy-progress__progress or
+mcp__savvy-progress__step, call mcp__agent-office__progress or
+mcp__agent-office__step instead, with the same fields.
+```
+
 Any other skill, plugin or prompt can report the same way. The mod adds two tools. Tell your own orchestrator (in its skill file or your `CLAUDE.md`) to call them:
 
-- `mcp__savvy-progress__progress`: the plan. Fields: `title`, `total`, `done`, `phase` (`plan`, `design`, `delegate`, `review`, `close`), `finished`, and `tasks` (a list of `{ title, tier, after }`). Call it after planning, after each finished step, and at the end with `finished: true`.
-- `mcp__savvy-progress__step`: a worker reports its own steps. Fields: `done`, `total`, `note`.
+- `mcp__agent-office__progress`: the plan. Fields: `title`, `total`, `done`, `phase` (`plan`, `design`, `delegate`, `review`, `close`), `finished`, and `tasks` (a list of `{ title, tier, after }`). Call it after planning, after each finished step, and at the end with `finished: true`.
+- `mcp__agent-office__step`: a worker reports its own steps. Fields: `done`, `total`, `note`.
 
 Example to paste into a `CLAUDE.md`:
 
 ```
-For any task with 3 or more steps, call mcp__savvy-progress__progress:
+For any task with 3 or more steps, call mcp__agent-office__progress:
 at the start with title, total and done: 0; after each step with the new done;
 at the end with done = total and finished: true.
 ```
@@ -98,13 +106,13 @@ What you can reuse:
 `language`: `auto` (default), `en` or `ru`. Change it in `/config`, or in `~/.claude/settings.json`:
 
 ```json
-{ "pluginConfigs": { "savvy-progress": { "options": { "language": "ru" } } } }
+{ "pluginConfigs": { "agent-office": { "options": { "language": "ru" } } } }
 ```
 
 ## Good to know
 
 - Cost is a rough estimate from token counts and a built-in price table (`PRICES` in `hooks/register.tsx`), not a bill.
-- The Workers window runs in a browser profile of its own, so it does not touch your normal Edge or Chrome. It reads and writes only inside `~/.claude/savvy-progress-window/`.
+- The Workers window runs in a browser profile of its own, so it does not touch your normal Edge or Chrome. It reads and writes only inside `~/.claude/agent-office-window/`.
 - The mod makes no network calls and sends nothing anywhere.
 
 ## Troubleshooting

@@ -3,17 +3,17 @@ import type { EngineInterface, Register } from 'claude-code'
 
 import type { AgentRun, Flow, Panel, Phase, PlannedTask } from '../types'
 
-const flow = atom({ plugin: 'savvy-progress', key: 'flow' } as const, null)
-const agents = atom({ plugin: 'savvy-progress', key: 'agents' } as const, [])
-const panel = atom({ plugin: 'savvy-progress', key: 'panel' } as const, {
+const flow = atom({ plugin: 'agent-office', key: 'flow' } as const, null)
+const agents = atom({ plugin: 'agent-office', key: 'agents' } as const, [])
+const panel = atom({ plugin: 'agent-office', key: 'panel' } as const, {
   isCompact: false,
   isDoneCollapsed: false,
   autoOpenedFor: '',
 })
-const now = atom({ plugin: 'savvy-progress', key: 'now' } as const, 0)
+const now = atom({ plugin: 'agent-office', key: 'now' } as const, 0)
 
-const TOOL = 'mcp__savvy-progress__progress'
-const STEP_TOOL = 'mcp__savvy-progress__step'
+const TOOL = 'mcp__agent-office__progress'
+const STEP_TOOL = 'mcp__agent-office__step'
 const PANE = 'savvy-agents'
 const PHASES: readonly Phase[] = ['plan', 'design', 'delegate', 'review', 'close']
 const ACCENT = '#8f8cf4'
@@ -749,7 +749,7 @@ async function windowDir($: EngineInterface): Promise<string> {
     (await $.env.get('USERPROFILE').catch(() => undefined)) ||
     (await $.env.get('HOME').catch(() => undefined)) ||
     ($.plugin.root.replace(/\\/g, '/').split('/.claude/')[0] ?? '')
-  return `${home.replace(/\\/g, '/').replace(/\/+$/, '')}/.claude/savvy-progress-window`
+  return `${home.replace(/\\/g, '/').replace(/\/+$/, '')}/.claude/agent-office-window`
 }
 
 // The static page is a template next to the code; the mod fills in the shared strings,
