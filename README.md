@@ -1,12 +1,22 @@
 # agent-office
 
-A mod for [Claude Code](https://claude.com/claude-code) that shows what your helper agents (subagents) are doing.
+**See your AI agents work in their own window, even when Claude is minimized.**
 
-It adds:
+A mod for [Claude Code](https://claude.com/claude-code). Its main purpose is the **separate Workers window**: a small floating window that shows what your helper agents (subagents) are doing right now. Minimize Claude, switch to your editor, browser or another screen, and the window stays where you put it.
 
+## Why
+
+Long agent jobs take minutes. Without this, you either stare at the Claude window or keep coming back to check. With it, you can:
+
+- **Keep working** on something else and glance at the window to see who is busy, who is done and what is next.
+- **Stop guessing.** Each worker shows its task, model, progress and time, so you know when to step in.
+- **Run several projects at once.** Each project gets its own window, so they never overlap.
+
+## What it adds
+
+- **A separate Workers window** for each project. Move it anywhere on your screen, minimize it like any window. It keeps updating while the Claude app is minimized.
+- **An agents panel** (`/agents-info`) inside Claude: running, finished and planned agents as little pixel office workers, with model, progress, context use, estimated cost and time.
 - **A progress bar** above the message box: the task name, the phase, and how many steps are done.
-- **An agents panel** (`/agents-info`): running, finished and planned agents as little pixel office workers, with model, progress, context use, estimated cost and time.
-- **A separate Workers window** for each project. It stays on screen when the Claude app is minimized, and you can move or minimize it like any window.
 
 Based on [johnnyvizz/claude-kit](https://github.com/JohnnyVizz/claude-kit) (MIT). This version adds the pixel workers, roles, the separate window and the per-project windows.
 
