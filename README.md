@@ -4,6 +4,13 @@
 
 A mod for [Claude Code](https://claude.com/claude-code). Its main purpose is the **separate Workers window**: a small floating window that shows what your helper agents (subagents) are doing right now. Minimize Claude, switch to your editor, browser or another screen, and the window stays where you put it.
 
+<p align="center">
+  <img src="docs/workers-window-full.png" alt="The Workers window in full mode: three running workers with progress bars and three planned tasks" width="300">
+  &nbsp;&nbsp;
+  <img src="docs/workers-window-compact.png" alt="The Workers window in compact mode: one line per worker" width="300">
+</p>
+<p align="center"><sub>The Workers window, full and compact. Sample data.</sub></p>
+
 ## Why
 
 Long agent jobs take minutes. Without this, you either stare at the Claude window or keep coming back to check. With it, you can:
