@@ -1,0 +1,8 @@
+.env
+.env.*
+*.pem
+*.key
+node_modules/
+profile*/
+state*.js
+.hallmark/

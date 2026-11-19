@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="{{LANG}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>{{workers}}</title>
+<meta name="description" content="{{desc}}">
+<style>
+:root{--bg:#1b1b1a;--fg:#ececec;--sec:#a8a8a4;--line:#333331;--track:#3a3a37;--est:#8a8a85}
+@media (prefers-color-scheme: light){:root{--bg:#f6f5f2;--fg:#1f1f1f;--sec:#5f5f5b;--line:#e1e0dc;--track:#dcdad5;--est:#8a8984}}
+*{box-sizing:border-box}
+html{background:var(--bg);overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--fg);font:13px/1.35 {{FONT}};overflow-x:clip}
+header{position:sticky;top:0;z-index:1;display:flex;align-items:baseline;gap:12px;padding:12px 16px 8px;background:var(--bg);border-bottom:1px solid var(--line)}
+h1{margin:0;font-size:15px;font-weight:650;text-wrap:balance}
+#status{flex:1;min-width:0;color:var(--sec);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+button{font:inherit;font-size:12px;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:6px;padding:4px 12px;min-height:28px;cursor:pointer}
+button:hover{border-color:var(--sec)}
+button:active{background:var(--line)}
+button:disabled{opacity:.5;cursor:default}
+button:focus-visible{outline:2px solid var(--sec);outline-offset:2px}
+main,#wait{padding:0 16px 16px}
+h2{margin:16px 0 4px;font-size:12px;font-weight:600;color:var(--sec);text-wrap:balance}
+.row{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:12px;align-items:center;min-height:52px;padding:4px 0;border-bottom:1px solid var(--line)}
+.art svg{display:block}
+.txt{min-width:0}
+.nm{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mt{margin-top:1px;font-size:12px;color:var(--sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dot{display:inline-block;width:8px;height:8px;margin-right:8px;border-radius:50%}
+.bar{height:4px;margin-top:8px;border-radius:2px;background:var(--track);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:2px}
+.bar i.est{background:var(--est)}
+.pc{min-width:36px;text-align:right;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
+.plan .nm{color:var(--sec)}
+.cr{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:8px;align-items:center;min-height:30px}
+.sum,.empty,#wait{margin:12px 0 0;color:var(--sec);font-size:12px}
+#wait{padding-top:8px}
+[hidden]{display:none}
+</style>
+{{CSS}}
+</head>
+<body>
+<header>
+<h1>{{workers}}</h1>
+<span id="status" aria-live="polite"></span>
+<button id="mode" type="button"></button>
+</header>
+<main id="app"></main>
+<p id="wait" hidden>{{waiting}}</p>
+<script>
+(function () {
+  var KEY = 'savvy-window-mode'
+  var mode = 'full'
+  var last = ''
+  var prev = null
+  var ownedAt = 0
+  var app = document.getElementById('app')
+  var wait = document.getElementById('wait')
+  var status = document.getElementById('status')
+  var btn = document.getElementById('mode')
+  try { if (localStorage.getItem(KEY) === 'compact') mode = 'compact' } catch (e) {}
+
+  function label() { btn.textContent = mode === 'full' ? '{{compact}}' : '{{full}}' }
+
+  btn.addEventListener('click', function () {
+    mode = mode === 'full' ? 'compact' : 'full'
+    try { localStorage.setItem(KEY, mode) } catch (e) {}
+    label()
+    draw()
+  })
+
+  function draw() {
+    var s = window.__S
+    var fresh = !!s && Date.now() - s.at < 5000
+    wait.hidden = fresh
+    app.hidden = !fresh
+    status.textContent = fresh ? s.status + (s.title ? ' · ' + s.title : '') : ''
+    document.title = '{{workers}}' + (fresh && s.running ? ' · ' + s.running : '')
+    // Only a changed body is swapped in: a redraw would restart the workers' animations.
+    if (fresh && s[mode] !== last) { app.innerHTML = s[mode]; last = s[mode] }
+  }
+
+  // A script tag works from file://, where fetch does not.
+  function load() {
+    var old = document.getElementById('st')
+    if (old) old.remove()
+    var tag = document.createElement('script')
+    tag.id = 'st'
+    tag.onload = function () {
+      var n = window.__S
+      // A session still on the old code writes without an owner and would blank a busy one.
+      if (n && !n.own && prev && Date.now() - ownedAt < 8000) window.__S = prev
+      else { prev = n; if (n && n.own) ownedAt = Date.now() }
+      draw()
+    }
+    tag.onerror = function () { window.__S = null; draw() }
+    tag.src = 'state.js?t=' + Date.now()
+    document.head.appendChild(tag)
+  }
+
+  label()
+  draw()
+  load()
+  setInterval(load, 1000)
+})()
+</script>
+</body>
+</html>

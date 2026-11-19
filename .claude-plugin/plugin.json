@@ -1,0 +1,19 @@
+{
+  "name": "savvy-progress",
+  "version": "1.3.0",
+  "description": "Progress bar above the prompt, an agents panel with pixel office workers, and a separate Workers window per project that stays visible when Claude is minimized.",
+  "author": { "name": "Leromem", "url": "https://github.com/Leromem" },
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "language": {
+      "type": "string",
+      "title": "Panel language",
+      "description": "auto follows Claude Code's language setting, then the system locale",
+      "default": "auto",
+      "options": ["auto", "en", "ru"]
+    }
+  },
+  "homepage": "https://github.com/Leromem/savvy-progress",
+  "repository": "https://github.com/Leromem/savvy-progress",
+  "license": "MIT"
+}
